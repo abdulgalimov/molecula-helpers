@@ -12,22 +12,26 @@ const client = createClient();
 
 async function main() {
   const rebaseToken = await createRebaseToken();
+  console.log("approve");
   const approveTx = await rebaseToken
     .approve(mUSDLockAddress, "1000000000000000000")
     .send();
 
+  console.log("approveTx", approveTx);
   await waitForTronTransaction(client, approveTx);
 
   const payload = encodeLockPayload({
     version: 1,
-    duration: 3,
+    duration: 90,
   });
 
   const musdLock = await createMUSDLock();
 
+  console.log("lock");
   const lockTx = await musdLock
-    .lock(1_000_000_000_000_000, `0x${payload}`)
+    .lock("100000000000000000", `0x${payload}`)
     .send();
+  console.log("lockTx", lockTx);
 
   await waitForTronTransaction(client, lockTx);
 }
